@@ -1,4 +1,5 @@
-import type { stations as Station } from '@prisma/client';
+// import type { stations as Station } from '@prisma/client';
+type Station = any;
 import { prisma } from '@/app/lib/prisma';
 
 async function getStations(): Promise<Station[]> {
