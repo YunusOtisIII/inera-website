@@ -1,20 +1,14 @@
-import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
+// Données statiques temporaires
+const stations = [
+  { id: 1, name: 'Yangambi', location: 'Tshopo' },
+  { id: 2, name: 'Mulungu', location: 'Sud-Kivu' },
+  { id: 3, name: 'Kipopo', location: 'Haut-Katanga' },
+  { id: 4, name: 'Mvuazi', location: 'Kongo Central' },
+  { id: 5, name: 'Luki', location: 'Kongo Central' },
+];
+
 export async function GET() {
-  try {
-    const stations = await prisma.station.findMany({
-      orderBy: {
-        name: 'asc'
-      }
-    });
-    
-    return NextResponse.json(stations);
-  } catch (error) {
-    console.error('Error fetching stations:', error);
-    return NextResponse.json(
-      { error: 'Erreur lors de la récupération des stations' },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json(stations);
 }
