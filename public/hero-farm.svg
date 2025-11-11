@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0" stop-color="#0f766e" />
+      <stop offset="1" stop-color="#16a34a" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#g)" rx="20" />
+  <g fill="#fff" opacity="0.9">
+    <circle cx="120" cy="380" r="60" />
+    <rect x="200" y="300" width="380" height="120" rx="12" />
+    <path d="M600 300 L680 260 L720 300 L660 320 Z" />
+  </g>
+  <text x="40" y="80" font-family="Arial" font-size="36" fill="#fff">Agriculture durable</text>
+</svg>

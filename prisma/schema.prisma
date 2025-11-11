@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model projects {
+  id             String           @id @db.VarChar(255)
+  title          String           @db.VarChar(255)
+  description    String?          @db.Text
+  status         projects_status? @default(IN_PROGRESS)
+  start_date     DateTime         @db.DateTime(0)
+  end_date       DateTime?        @db.DateTime(0)
+  station_id     String           @db.VarChar(255)
+  created_at     DateTime?        @default(now()) @db.DateTime(0)
+  updated_at     DateTime?        @default(now()) @db.DateTime(0)
+  stations       stations         @relation(fields: [station_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "projects_ibfk_1")
+  users_projects users_projects[]
+
+  @@index([station_id], map: "station_id")
+}
+
+model publications {
+  id                 String               @id @db.VarChar(255)
+  title              String               @db.VarChar(255)
+  abstract           String?              @db.Text
+  file_url           String?              @db.VarChar(255)
+  year               Int
+  doi                String?              @db.VarChar(255)
+  created_at         DateTime?            @default(now()) @db.DateTime(0)
+  updated_at         DateTime?            @default(now()) @db.DateTime(0)
+  users_publications users_publications[]
+}
+
+model stations {
+  id          String     @id @db.VarChar(255)
+  name        String     @db.VarChar(255)
+  location    String     @db.VarChar(255)
+  specialty   String     @db.VarChar(255)
+  description String?    @db.Text
+  created_at  DateTime?  @default(now()) @db.DateTime(0)
+  updated_at  DateTime?  @default(now()) @db.DateTime(0)
+  projects    projects[]
+  users       users[]
+}
+
+model users {
+  id                 String               @id @db.VarChar(255)
+  name               String?              @db.VarChar(255)
+  email              String               @unique(map: "email") @db.VarChar(255)
+  email_verified     DateTime?            @db.DateTime(0)
+  password           String               @db.VarChar(255)
+  image              String?              @db.VarChar(255)
+  role               users_role?          @default(USER)
+  station_id         String?              @db.VarChar(255)
+  created_at         DateTime?            @default(now()) @db.DateTime(0)
+  updated_at         DateTime?            @default(now()) @db.DateTime(0)
+  stations           stations?            @relation(fields: [station_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_ibfk_1")
+  users_projects     users_projects[]
+  users_publications users_publications[]
+
+  @@index([station_id], map: "station_id")
+}
+
+model users_projects {
+  user_id    String   @db.VarChar(255)
+  project_id String   @db.VarChar(255)
+  users      users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_projects_ibfk_1")
+  projects   projects @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_projects_ibfk_2")
+
+  @@id([user_id, project_id])
+  @@index([project_id], map: "project_id")
+}
+
+model users_publications {
+  user_id        String       @db.VarChar(255)
+  publication_id String       @db.VarChar(255)
+  users          users        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_publications_ibfk_1")
+  publications   publications @relation(fields: [publication_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_publications_ibfk_2")
+
+  @@id([user_id, publication_id])
+  @@index([publication_id], map: "publication_id")
+}
+
+enum projects_status {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  ON_HOLD
+}
+
+enum users_role {
+  ADMIN
+  RESEARCHER
+  SECRETARY
+  SUPERVISOR
+  USER
+}
